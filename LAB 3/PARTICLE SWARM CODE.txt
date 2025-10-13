@@ -1,0 +1,69 @@
+import random
+
+
+def fitness_function(x, y):
+    return x**2 + y**2
+
+
+NUM_PARTICLES = 10
+ITERATIONS = 50
+X_RANGE = (-10, 10)
+Y_RANGE = (-10, 10)
+W = 0.7       
+C1 = 1.5       
+C2 = 1.5     
+
+
+particles = []
+for _ in range(NUM_PARTICLES):
+    x = random.uniform(*X_RANGE)
+    y = random.uniform(*Y_RANGE)
+    vx = random.uniform(-1, 1)
+    vy = random.uniform(-1, 1)
+    particles.append({
+        "x": x, "y": y,
+        "vx": vx, "vy": vy,
+        "best_x": x, "best_y": y,
+        "best_f": fitness_function(x, y)
+    })
+
+
+g_best = min(particles, key=lambda p: p["best_f"])
+g_best_x, g_best_y, g_best_f = g_best["x"], g_best["y"], g_best["best_f"]
+
+
+for iter in range(1, ITERATIONS + 1):
+    for p in particles:
+        
+        r1, r2 = random.random(), random.random()
+        p["vx"] = (W * p["vx"]
+                   + C1 * r1 * (p["best_x"] - p["x"])
+                   + C2 * r2 * (g_best_x - p["x"]))
+        p["vy"] = (W * p["vy"]
+                   + C1 * r1 * (p["best_y"] - p["y"])
+                   + C2 * r2 * (g_best_y - p["y"]))
+
+        
+        p["x"] += p["vx"]
+        p["y"] += p["vy"]
+
+        
+        f = fitness_function(p["x"], p["y"])
+
+       
+        if f < p["best_f"]:
+            p["best_x"], p["best_y"], p["best_f"] = p["x"], p["y"], f
+
+  
+    current_best = min(particles, key=lambda p: p["best_f"])
+    if current_best["best_f"] < g_best_f:
+        g_best_x, g_best_y, g_best_f = current_best["best_x"], current_best["best_y"], current_best["best_f"]
+
+
+    if iter in [1, 10, 20, 30, 40, 50]:
+        print(f"Iteration {iter}: Best (x, y) = ({g_best_x:.4f}, {g_best_y:.4f}), f(x, y) = {g_best_f:.6f}")
+
+
+print("\n✅ Final Best Solution:")
+print(f"Best (x, y) = ({g_best_x:.6f}, {g_best_y:.6f})")
+print(f"Minimum value f(x, y) = {g_best_f:.6f}")
