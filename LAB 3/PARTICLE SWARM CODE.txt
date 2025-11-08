@@ -64,6 +64,7 @@ for iter in range(1, ITERATIONS + 1):
         print(f"Iteration {iter}: Best (x, y) = ({g_best_x:.4f}, {g_best_y:.4f}), f(x, y) = {g_best_f:.6f}")
 
 
-print("\n✅ Final Best Solution:")
+print("\nFinal Best Solution:")
 print(f"Best (x, y) = ({g_best_x:.6f}, {g_best_y:.6f})")
+
 print(f"Minimum value f(x, y) = {g_best_f:.6f}")
